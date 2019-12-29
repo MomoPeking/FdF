@@ -6,7 +6,7 @@
 /*   By: qdang <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/25 16:41:14 by qdang             #+#    #+#             */
-/*   Updated: 2019/12/26 19:52:38 by qdang            ###   ########.fr       */
+/*   Updated: 2019/12/28 16:23:23 by qdang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,9 @@ static int		store_line_point(char *line, int y, t_point **store, int s_nb)
 	j = 0;
 	while (j < i)
 	{
-		(*store)[s_nb].x = j;
-		(*store)[s_nb].y = y;
-		(*store)[s_nb].z = store_z[j];
+		(*store)[s_nb].x = (double)j * 5;
+		(*store)[s_nb].y = (double)y * 5;
+		(*store)[s_nb].z = (double)store_z[j];
 		j++;
 		s_nb++;
 	}
@@ -56,15 +56,19 @@ static t_point	*store_all_point(int fd, int point_number)
 	char	*line;
 	int		y;
 	int		s_nb;
+	int		i;
 
 	y = 0;
 	s_nb = 0;
+	i = -1;
 	store = (t_point *)malloc(sizeof(t_point) * point_number);
 	while (get_next_line(fd, &line) == 1)
 	{
 		s_nb = store_line_point(line, y, &store, s_nb);
 		y++;
 	}
+	while (++i < point_number)
+		store[i].row = y;
 	return (store);
 }
 

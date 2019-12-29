@@ -6,7 +6,7 @@
 #    By: qdang <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/12/19 20:05:36 by qdang             #+#    #+#              #
-#    Updated: 2019/12/25 19:29:49 by qdang            ###   ########.fr        #
+#    Updated: 2019/12/26 21:55:58 by qdang            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,8 +23,8 @@ LIB_LINK = -I $(MLX_PATH) -L $(LIB_PATH) -lft
 $(NAME):
 	@make -C $(MLX_PATH)
 	@make -C $(LIB_PATH)
-	@gcc -g -c *.c
-	@gcc $(MLX_LINK) $(LIB_LINK) *.o -o $(NAME)
+	@gcc -g  -c *.c
+	@gcc $(MLX_LINK) $(LIB_LINK) -lm *.o -o $(NAME)
 
 all: $(NAME)
 
