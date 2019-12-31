@@ -1,35 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   ft_dtoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: qdang <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/09/20 11:45:23 by qdang             #+#    #+#             */
-/*   Updated: 2019/12/29 17:40:59 by qdang            ###   ########.fr       */
+/*   Created: 2019/12/29 20:34:11 by qdang             #+#    #+#             */
+/*   Updated: 2019/12/29 20:50:18 by qdang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int		ft_atoi(const char *str)
+int		ft_dtoi(double nb)
 {
-	int		ans;
-	int		neg;
-
-	ans = 0;
-	neg = 1;
-	while (*str == ' ' || *str == '\t' || *str == '\n'
-			|| *str == '\v' || *str == '\r' || *str == '\f')
-		str++;
-	if (*str == '-')
-		neg = -1;
-	if (*str == '+' || *str == '-')
-		str++;
-	while (*str >= '0' && *str <= '9')
-	{
-		ans = (ans * 10 + *str - '0');
-		str++;
-	}
-	return (ans * neg);
+	if (nb - (int)nb >= 0.5)
+		return ((int)nb + 1);
+	else
+		return ((int)nb);
 }

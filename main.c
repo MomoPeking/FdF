@@ -6,60 +6,69 @@
 /*   By: qdang <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/19 20:20:53 by qdang             #+#    #+#             */
-/*   Updated: 2019/12/28 21:32:16 by qdang            ###   ########.fr       */
+/*   Updated: 2019/12/31 10:45:06 by qdang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 #include <stdio.h>
 
-t_point	*enlarge(t_point *store)
+t_point	*color_calculate(t_point *store)
 {
 	int		i;
 
 	i = -1;
 	while (++i < store[0].pn)
 	{
-		store[i].x = store[i].x * 4 + 250;
-		store[i].y = store[i].y * 4 + 250;
-		store[i].z = store[i].z * 4 + 250;
+		store[i].red = store[i].color / 65536;
+		store[i].green = store[i].color / 256 - store[i].red * 256;
+		store[i].blue = store[i].color % 256;
 	}
 	return (store);
 }
 
-int		round_nb(double nb)
+int		color_zlow(int k)
 {
-	if (nb - (int)nb >= 0.5)
-		return ((int)nb + 1);
-	else
-		return ((int)nb);
+	int		r;
+	int		g;
+	int		b;
+
+	r = LR + (PR - LR) * k;
+	g = LG + (PG - LG) * k;
+	b = LB + (PB - LB) * k;
+	return (r * 65536 + g * 256 + b);
 }
 
-void	draw_a_line(void *mlx_ptr, void *win_ptr, t_point p1, t_point p2)
+int		color_zhigh(int k)
+{
+	int		r;
+	int		g;
+	int		b;
+
+	r = PR + (HR - PR) * k;
+	g = PG + (HG - PG) * k;
+	b = PB + (HG - PB) * k;
+	return (r * 65536 + g * 256 + b);
+}
+
+t_point	*color_set(t_point *store)
 {
 	int		i;
-	double	k;
 
 	i = -1;
-	if (round_nb(p1.x) == round_nb(p2.x))
+	while (++i < store[0].pn)
 	{
-		if (round_nb(p1.y) - round_nb(p2.y) >= 0)
-			while (++i <= round_nb(p1.y) - round_nb(p2.y))
-				mlx_pixel_put(mlx_ptr, win_ptr, round_nb(p1.x), round_nb(p2.y) + i, 0xFF0000);
-		else
-			while (++i <= round_nb(p2.y) - round_nb(p1.y))
-				mlx_pixel_put(mlx_ptr, win_ptr, round_nb(p1.x), round_nb(p1.y) + i, 0xFF0000);
+		if (store[i].color == 0)
+		{
+			if (store[i].z == 0)
+				store[i].color = PLAIN;
+			else if (store[i].z > 0)
+				store[i].color = color_zhigh(store[i].z / store[0].zhigh);
+			else
+				store[i].color = color_zlow(store[i].z / store[0].zlow);
+		}
 	}
-	else
-	{
-		k = (p2.y - p1.y) / (p2.x - p1.x);
-		if (p2.x > p1.x)
-			while (++i <= round_nb(p2.x) - round_nb(p1.x))
-				mlx_pixel_put(mlx_ptr, win_ptr, round_nb(p1.x) + i, round_nb(p1.y + i * k), 0xFF0000);
-		else	
-			while (++i <= round_nb(p1.x) - round_nb(p2.x))
-				mlx_pixel_put(mlx_ptr, win_ptr, round_nb(p2.x) + i, round_nb(p2.y + i * k), 0xFF0000);
-	}
+	return (store);
 }
 
 void	window(t_point *store)
@@ -67,51 +76,43 @@ void	window(t_point *store)
 	void	*mlx_ptr;
 	void	*win_ptr;
 	int		i;
-	int		col;
 
 	i = -1;
-	col = store[0].pn / store[0].row;
 	mlx_ptr = mlx_init();
 	win_ptr = mlx_new_window(mlx_ptr, 2000, 1000, "FdF");
-	store = rotation_ccw_x(store, -0.5);
-	store = rotation_ccw_y(store, 0.5);
-	store = rotation_ccw_z(store, -0.5);
-	
-//	while (++i < store[0].pn)
-//		printf("{x:%f, y:%f, z:%f}\n", store[i].x, store[i].y, store[i].z);
-
-
-	store = enlarge(store);
-
-
+	store = color_set(store);
+	store = color_calculate(store);
+	store = enlarge(store, 10, 10, 4);
+	store = rotation_x(store, -0.5);
+	store = rotation_y(store, 0.5);
+	store = rotation_z(store, -0.5);
+	store = enlarge(store, 2, 2, 2);
+	store = move(store, 500, 250, 250);
+	store = xy_to_int(store);
 	while (++i < store[0].pn)
 	{
-		if (i % col < col - 1)
-			draw_a_line(mlx_ptr, win_ptr, store[i], store[i + 1]);
-		if (i < store[0].pn - col)
-			draw_a_line(mlx_ptr, win_ptr, store[i], store[i + col]);
+		if (i % store[0].col < store[0].col - 1)
+			draw_line(mlx_ptr, win_ptr, store[i], store[i + 1]);
+		if (i < store[0].pn - store[0].col)
+			draw_line(mlx_ptr, win_ptr, store[i], store[i + store[0].col]);
 	}
-	mlx_key_hook(win_ptr, press_esc(53));
 	mlx_loop(mlx_ptr);
 }
 
-
-
-
-
-int		press_esc(int esc)
-{
-	return (-)
-}
-
-
-
 int		main(int ac, char **av)
 {
+	int		i;
 	t_point	*store;
+
+	i = -1;
 	if (ac == 2)
 	{
 		store = read_and_store(av[1]);
+		printf("%d\n", store[0].zhigh);
+		printf("%d\n", store[0].zlow);
+		printf("%d %d %d\n", HR, HG, HB);
+		printf("%d %d %d\n", PR, PG, PB);
+		printf("%d %d %d\n", LR, LG, LB);
 //		while (++i < store[0].pn)
 //		   printf("{x:%f, y:%f, z:%f}\n", store[i].x, store[i].y, store[i].z);
 		window(store);

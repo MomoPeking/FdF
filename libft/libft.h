@@ -6,7 +6,7 @@
 /*   By: qdang <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/18 21:04:30 by qdang             #+#    #+#             */
-/*   Updated: 2019/12/27 15:15:07 by qdang            ###   ########.fr       */
+/*   Updated: 2019/12/29 20:35:54 by qdang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,5 +93,7 @@ char			**ft_mapcpy(char **old, int width, int length);
 int				ft_mapdel(char ***map_a, int length);
 int				ft_strnbr(char *sp);
 int				ft_abs(int i);
+int				ft_atoihex(const char *str);
+int				ft_dtoi(double nb);
 
 #endif
