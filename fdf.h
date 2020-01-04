@@ -6,7 +6,7 @@
 /*   By: qdang <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/26 19:46:17 by qdang             #+#    #+#             */
-/*   Updated: 2019/12/31 10:17:57 by qdang            ###   ########.fr       */
+/*   Updated: 2020/01/04 15:04:27 by qdang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,16 +40,19 @@
 # define	LG		LOW / 256 - LR * 256
 # define	LB		LOW % 256
 
+# define	ESC		53
+# define	RIGHT	124
+
 
 typedef struct	s_point
 {
 	double	x;
 	double	y;
 	double	z;
-	int		zhigh;
-	int		zlow;
-	int		intx;
-	int		inty;
+	int		z_high;
+	int		z_low;
+	int		x_int;
+	int		y_int;
 	int		color;
 	int		red;
 	int		green;
@@ -72,5 +75,8 @@ int				line_color_xe(t_point p1, t_point p2, int i);
 
 t_point			*xy_to_int(t_point *store);
 void			draw_line(void *mlx_ptr, void *win_ptr, t_point p1, t_point p2);
+
+t_point			*color_calculate(t_point *store);
+t_point			*color_set(t_point *store);
 
 #endif
