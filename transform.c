@@ -5,76 +5,66 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: qdang <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/12/29 20:55:53 by qdang             #+#    #+#             */
-/*   Updated: 2019/12/30 20:50:17 by qdang            ###   ########.fr       */
+/*   Created: 2020/01/04 18:38:50 by qdang             #+#    #+#             */
+/*   Updated: 2020/01/04 18:38:52 by qdang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-t_point	*rotation_x(t_point *store, double angle)
+t_fdf	*rotation(t_fdf *fdf)
 {
 	int		i;
 
 	i = -1;
-	while (++i < store[0].pn)
+	while (++i < fdf->pn)
 	{
-		store[i].y = store[i].y * cos(angle) + store[i].z * sin(angle);
-		store[i].z = store[i].z * cos(angle) - store[i].y * sin(angle);
+		fdf->point[i].y = fdf->point[i].y * cos(fdf->x_rt) + fdf->point[i].z * sin(fdf->x_rt);
+		fdf->point[i].z = fdf->point[i].z * cos(fdf->x_rt) - fdf->point[i].y * sin(fdf->x_rt);
+        fdf->point[i].x = fdf->point[i].x * cos(fdf->y_rt) - fdf->point[i].z * sin(fdf->y_rt);
+		fdf->point[i].z = fdf->point[i].z * cos(fdf->y_rt) + fdf->point[i].x * sin(fdf->y_rt);
+        fdf->point[i].x = fdf->point[i].x * cos(fdf->z_rt) + fdf->point[i].y * sin(fdf->z_rt);
+		fdf->point[i].y = fdf->point[i].y * cos(fdf->z_rt) - fdf->point[i].x * sin(fdf->z_rt);
 	}
-	return (store);
+	return (fdf);
 }
 
-t_point	*rotation_y(t_point *store, double angle)
+t_fdf	*move(t_fdf *fdf)
 {
 	int		i;
 
 	i = -1;
-	while (++i < store[0].pn)
+	while (++i < fdf->pn)
 	{
-		store[i].x = store[i].x * cos(angle) - store[i].z * sin(angle);
-		store[i].z = store[i].z * cos(angle) + store[i].x * sin(angle);
+		fdf->point[i].x += fdf->x_move;
+		fdf->point[i].y += fdf->y_move;
 	}
-	return (store);
+	return (fdf);
 }
 
-t_point	*rotation_z(t_point *store, double angle)
+t_fdf	*enlarge(t_fdf *fdf)
 {
 	int		i;
 
 	i = -1;
-	while (++i < store[0].pn)
+	while (++i < fdf->pn)
 	{
-		store[i].x = store[i].x * cos(angle) + store[i].y * sin(angle);
-		store[i].y = store[i].y * cos(angle) - store[i].x * sin(angle);
+		fdf->point[i].x *= fdf->xy_times;
+		fdf->point[i].y *= fdf->xy_times;
+		fdf->point[i].z *= fdf->z_times;
 	}
-	return (store);
+	return (fdf);
 }
 
-t_point	*enlarge(t_point *store, int xt, int yt, int zt)
+t_fdf	*to_int(t_fdf *fdf)
 {
 	int		i;
 
 	i = -1;
-	while (++i < store[0].pn)
+	while (++i < fdf->pn)
 	{
-		store[i].x = store[i].x * xt;
-		store[i].y = store[i].y * yt;
-		store[i].z = store[i].z * zt;
+		fdf->point[i].x_int = ft_dtoi(fdf->point[i].x);
+		fdf->point[i].y_int = ft_dtoi(fdf->point[i].y);
 	}
-	return (store);
-}
-
-t_point	*move(t_point *store, int xd, int yd, int zd)
-{
-	int		i;
-
-	i = -1;
-	while (++i < store[0].pn)
-	{
-		store[i].x = store[i].x + xd;
-		store[i].y = store[i].y + yd;
-		store[i].z = store[i].z + zd;
-	}
-	return (store);
+	return (fdf);
 }

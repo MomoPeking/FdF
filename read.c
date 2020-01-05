@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: qdang <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/12/25 16:41:14 by qdang             #+#    #+#             */
-/*   Updated: 2020/01/04 15:05:26 by qdang            ###   ########.fr       */
+/*   Created: 2020/01/04 17:12:20 by qdang             #+#    #+#             */
+/*   Updated: 2020/01/04 17:45:26 by qdang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static int		get_point_number(int fd)
 	return (pn);
 }
 
-static int		store_line_point(char *line, int row, t_point **store, int s_nb)
+static int		store_line_point(char *line, int row, t_fdf *fdf, int sn)
 {
 	char	**content;
 	char	**temp;
@@ -34,58 +34,57 @@ static int		store_line_point(char *line, int row, t_point **store, int s_nb)
 	while (*content)
 	{
 		temp = ft_strsplit(*content, ',');
-		(*store)[s_nb].x = (double)i;
-		(*store)[s_nb].y = (double)row;
-		(*store)[s_nb].z = (double)ft_atoi(temp[0]);
-		if ((*store)[s_nb].z > (*store)[0].z_high)
-			(*store)[0].z_high = (*store)[s_nb].z;
-		if ((*store)[s_nb].z < (*store)[0].z_low)
-			(*store)[0].z_low = (*store)[s_nb].z;
+		fdf->info[sn].x = i;
+		fdf->info[sn].y = row;
+		fdf->info[sn].z = ft_atoi(temp[0]);
+		if (fdf->info[sn].z > fdf->z_high)
+			fdf->z_high = fdf->info[sn].z;
+		if (fdf->info[sn].z < fdf->z_low)
+			fdf->z_low = fdf->info[sn].z;
 		if (temp[1])
-			(*store)[s_nb].color = ft_atoihex(temp[1]);
+			fdf->point[sn].color = ft_atoihex(temp[1]);
 		else
-			(*store)[s_nb].color = 0;
+			fdf->point[sn].color = 0;
 		content++;
-		s_nb++;
+		sn++;
 		i++;
 	}
-	return (s_nb);
+	return (sn);
 }
 
-static t_point	*store_all_point(int fd, int pn)
+static t_fdf	*store_all_point(int fd, t_fdf *fdf)
 {
-	t_point	*store;
 	char	*line;
 	int		row;
-	int		s_nb;
+	int		sn;
 
 	row = 0;
-	s_nb = 0;
-	store = (t_point *)malloc(sizeof(t_point) * pn);
-	store[0].z_high = 0;
-	store[0].z_low = 0;
+	sn = 0;
 	while (get_next_line(fd, &line) == 1)
 	{
-		s_nb = store_line_point(line, row, &store, s_nb);
+		sn = store_line_point(line, row, fdf, sn);
 		row++;
 	}
-	store[0].col = pn / row;
-	return (store);
+	fdf->col = fdf->pn / row;
+	return (fdf);
 }
 
-t_point			*read_and_store(char *file)
+t_fdf			*read_and_store(char *file)
 {
 	int		fd;
 	int		pn;
-	int		i;
-	t_point	*store;
+	t_fdf	*fdf;
 
-	i = -1;
 	fd = open(file, O_RDONLY);
 	pn = get_point_number(fd);
 	close(fd);
+	fdf = (t_fdf *)malloc(sizeof(t_fdf));
+	fdf->info = (t_info *)malloc(sizeof(t_info) * pn);
+	fdf->point = (t_point *)malloc(sizeof(t_point) * pn);
+	fdf->pn = pn;
+	fdf->z_high = 0;
+	fdf->z_low = 0;
 	fd = open(file, O_RDONLY);
-	store = store_all_point(fd, pn);
-	store[0].pn = pn;
-	return (store);
+	fdf = store_all_point(fd, fdf);
+	return (fdf);
 }

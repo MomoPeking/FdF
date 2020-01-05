@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: qdang <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/12/26 19:46:17 by qdang             #+#    #+#             */
-/*   Updated: 2020/01/04 16:49:42 by qdang            ###   ########.fr       */
+/*   Created: 2020/01/04 17:07:34 by qdang             #+#    #+#             */
+/*   Updated: 2020/01/04 17:46:47 by qdang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 # include "libft/libft.h"
 # include "libft/get_next_line.h"
 # include "minilibx/mlx.h"
-# include <unistd.h>
 # include <fcntl.h>
 # include <math.h>
 
@@ -46,41 +45,68 @@
 # define	UP		126
 # define	DOWN	125
 # define	P		35
+# define	I		34
+# define	H		4
+# define	L		37
+# define	B		11
+# define	S		1
+
+typedef struct	s_info
+{
+	int		x;
+	int		y;
+	int		z;
+}				t_info;
 
 typedef struct	s_point
 {
 	double	x;
 	double	y;
 	double	z;
-	void	*mlx_ptr;
-	void	*win_ptr;
-	int		z_high;
-	int		z_low;
 	int		x_int;
 	int		y_int;
 	int		color;
 	int		red;
 	int		green;
 	int		blue;
-	int		col;
-	int		pn;
 }				t_point;
 
-t_point			*read_and_store(char *file);
+typedef struct	s_fdf
+{
+	t_info	*info;
+	t_point	*point;
+	void	*mlx_ptr;
+	void	*win_ptr;
+	int		z_high;
+	int		z_low;
+	int		col;
+	int		pn;
+	double	x_rt;
+	double	y_rt;
+	double	z_rt;
+	int		x_move;
+	int		y_move;
+	int		xy_times;
+	int		z_times;
+}				t_fdf;
 
-t_point			*rotation_x(t_point *store, double angle);
-t_point			*rotation_y(t_point *store, double angle);
-t_point			*rotation_z(t_point *store, double angle);
-t_point			*enlarge(t_point *store, int xt, int yt, int zt);
-t_point			*move(t_point *store, int xd, int yd, int zd);
+t_fdf			*read_and_store(char *file);
 
 int				line_color_xne(t_point p1, t_point p2, int i);
 int				line_color_yne(t_point p1, t_point p2, int i);
 int				line_color_xe(t_point p1, t_point p2, int i);
+int				color_transpoint(int a1, int a2, char c);
 
-void			draw_all(t_point *store);
+t_fdf			*point_set(t_fdf *fdf);
+t_fdf			*color_set(t_fdf *fdf);
+t_fdf			*iso_set(t_fdf *fdf);
+t_fdf			*parallel_set(t_fdf *fdf);
 
-t_point			*color_calculate(t_point *store);
-t_point			*color_set(t_point *store);
+t_fdf			*rotation(t_fdf *fdf);
+t_fdf			*move(t_fdf *fdf);
+t_fdf			*enlarge(t_fdf *fdf);
+t_fdf			*to_int(t_fdf *fdf);
+
+void			draw_all(t_fdf *fdf);
 
 #endif
