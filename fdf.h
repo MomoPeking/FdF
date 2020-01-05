@@ -6,7 +6,7 @@
 /*   By: qdang <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/26 19:46:17 by qdang             #+#    #+#             */
-/*   Updated: 2020/01/04 15:04:27 by qdang            ###   ########.fr       */
+/*   Updated: 2020/01/04 16:49:42 by qdang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,18 @@
 
 # define	ESC		53
 # define	RIGHT	124
-
+# define	LEFT	123
+# define	UP		126
+# define	DOWN	125
+# define	P		35
 
 typedef struct	s_point
 {
 	double	x;
 	double	y;
 	double	z;
+	void	*mlx_ptr;
+	void	*win_ptr;
 	int		z_high;
 	int		z_low;
 	int		x_int;
@@ -73,8 +78,7 @@ int				line_color_xne(t_point p1, t_point p2, int i);
 int				line_color_yne(t_point p1, t_point p2, int i);
 int				line_color_xe(t_point p1, t_point p2, int i);
 
-t_point			*xy_to_int(t_point *store);
-void			draw_line(void *mlx_ptr, void *win_ptr, t_point p1, t_point p2);
+void			draw_all(t_point *store);
 
 t_point			*color_calculate(t_point *store);
 t_point			*color_set(t_point *store);

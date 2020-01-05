@@ -6,13 +6,13 @@
 /*   By: qdang <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/30 23:16:14 by qdang             #+#    #+#             */
-/*   Updated: 2019/12/30 23:37:14 by qdang            ###   ########.fr       */
+/*   Updated: 2020/01/04 16:49:45 by qdang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-t_point		*xy_to_int(t_point *store)
+static t_point	*xy_to_int(t_point *store)
 {
 	int		i;
 
@@ -25,7 +25,8 @@ t_point		*xy_to_int(t_point *store)
 	return (store);
 }
 
-static void	draw_line_lx(void *mlx_ptr, void *win_ptr, t_point p1, t_point p2)
+static void		draw_line_lx(void *mlx_ptr, void *win_ptr,
+		t_point p1, t_point p2)
 {
 	int		i;
 	double	k;
@@ -42,7 +43,8 @@ static void	draw_line_lx(void *mlx_ptr, void *win_ptr, t_point p1, t_point p2)
 					ft_dtoi(p2.y + i * k), line_color_xne(p1, p2, i));
 }
 
-static void	draw_line_ly(void *mlx_ptr, void *win_ptr, t_point p1, t_point p2)
+static void		draw_line_ly(void *mlx_ptr, void *win_ptr,
+		t_point p1, t_point p2)
 {
 	int		i;
 	double	k;
@@ -59,7 +61,8 @@ static void	draw_line_ly(void *mlx_ptr, void *win_ptr, t_point p1, t_point p2)
 					p2.y_int + i, line_color_yne(p1, p2, i));
 }
 
-void		draw_line(void *mlx_ptr, void *win_ptr, t_point p1, t_point p2)
+static void		draw_line(void *mlx_ptr, void *win_ptr,
+		t_point p1, t_point p2)
 {
 	int		i;
 
@@ -74,5 +77,23 @@ void		draw_line(void *mlx_ptr, void *win_ptr, t_point p1, t_point p2)
 			draw_line_lx(mlx_ptr, win_ptr, p1, p2);
 		else
 			draw_line_ly(mlx_ptr, win_ptr, p1, p2);
+	}
+}
+
+void			draw_all(t_point *store)
+{
+	int	i;
+
+	i = -1;
+	mlx_clear_window(store[0].mlx_ptr, store[0].win_ptr);
+	store = xy_to_int(store);
+	while (++i < store[0].pn)
+	{
+		if (i % store[0].col < store[0].col - 1)
+			draw_line(store[0].mlx_ptr, store[0].win_ptr,
+					store[i], store[i + 1]);
+		if (i < store[0].pn - store[0].col)
+			draw_line(store[0].mlx_ptr, store[0].win_ptr,
+					store[i], store[i + store[0].col]);
 	}
 }

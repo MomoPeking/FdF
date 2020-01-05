@@ -6,26 +6,60 @@
 /*   By: qdang <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/19 20:20:53 by qdang             #+#    #+#             */
-/*   Updated: 2020/01/04 15:05:23 by qdang            ###   ########.fr       */
+/*   Updated: 2020/01/04 16:49:49 by qdang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 #include <stdio.h>
 
-int		key_press(int keycode, void *store)
+int		key_press(int keycode, t_point *store)
 {
 	if (keycode == ESC)
 		exit(0);
 	if (keycode == RIGHT)
 	{
-		
-
-
 		store = move(store, 10, 0, 0);
+		draw_all(store);
 	}
+	if (keycode == LEFT)
+	{
+		store = move(store, -10, 0, 0);
+		draw_all(store);
+	}
+	if (keycode == UP)
+	{
+		store = move(store, 0, -10, 0);
+		draw_all(store);
+	}
+	if (keycode == DOWN)
+	{
+		store = move(store, 0, 10, 0);
+		draw_all(store);
+	}
+	if (keycode == P)
+	{
+		store = move(store, 0, 10, 0);
+		draw_all(store);
+	}
+
+
 	return (0);
 }
+
+t_point	*init_set(t_point *store)
+{
+	store = color_set(store);
+	store = color_calculate(store);
+	store = rotation_x(store, -0.5);
+	store = rotation_y(store, 0.5);
+	store = rotation_z(store, -0.5);
+	store = enlarge(store, 30, 30, 30);
+	store = move(store, 500, 250, 250);
+	return (store);
+}
+
+
 
 int		close_window(void *store)
 {
@@ -33,6 +67,8 @@ int		close_window(void *store)
 	exit(0);
 	return (0);
 }
+
+
 
 void	window(t_point *store)
 {
@@ -42,28 +78,13 @@ void	window(t_point *store)
 
 	i = -1;
 	mlx_ptr = mlx_init();
-	win_ptr = mlx_new_window(mlx_ptr, 2000, 1000, "FdF");
-	store = color_set(store);
-	store = color_calculate(store);
-	mlx_key_hook(win_ptr, key_press, store);
-
-
+	win_ptr = mlx_new_window(mlx_ptr, 1500, 1000, "FdF");
+	store[0].mlx_ptr = mlx_ptr;
+	store[0].win_ptr = win_ptr;
 //	store = enlarge(store, 10, 10, 4);
-	store = rotation_x(store, -0.5);
-	store = rotation_y(store, 0.5);
-	store = rotation_z(store, -0.5);
-	store = enlarge(store, 20, 20, 20);
-	store = move(store, 500, 250, 250);
-	store = xy_to_int(store);
-	while (++i < store[0].pn)
-	{
-		if (i % store[0].col < store[0].col - 1)
-			draw_line(mlx_ptr, win_ptr, store[i], store[i + 1]);
-		if (i < store[0].pn - store[0].col)
-			draw_line(mlx_ptr, win_ptr, store[i], store[i + store[0].col]);
-	}
-
-
+	store = init_set(store);
+	draw_all(store);
+	mlx_key_hook(win_ptr, key_press, store);
 	mlx_hook(win_ptr, 17, 0, close_window, store);
 	mlx_loop(mlx_ptr);
 }
