@@ -12,7 +12,7 @@
 
 #include "fdf.h"
 
-int		line_color_xne(t_point p1, t_point p2, int i)
+int				line_color_xne(t_point p1, t_point p2, int i)
 {
 	int		r;
 	int		g;
@@ -33,7 +33,7 @@ int		line_color_xne(t_point p1, t_point p2, int i)
 	return (r * 65536 + g * 256 + b);
 }
 
-int		line_color_yne(t_point p1, t_point p2, int i)
+int				line_color_yne(t_point p1, t_point p2, int i)
 {
 	int		r;
 	int		g;
@@ -54,7 +54,7 @@ int		line_color_yne(t_point p1, t_point p2, int i)
 	return (r * 65536 + g * 256 + b);
 }
 
-int		line_color_xe(t_point p1, t_point p2, int i)
+int				line_color_xe(t_point p1, t_point p2, int i)
 {
 	int		r;
 	int		g;
@@ -75,25 +75,43 @@ int		line_color_xe(t_point p1, t_point p2, int i)
 	return (r * 65536 + g * 256 + b);
 }
 
-int		color_transpoint(int a1, int a2, char c)
+static t_color	*color_hpl(t_color *color)
+{
+	color->hr = HIGH / 65536;
+	color->hg = HIGH / 256 - color->hr * 256;
+	color->hb = HIGH % 256;
+	color->pr = PLAIN / 65536;
+	color->pg = PLAIN / 256 - color->pr * 256;
+	color->pb = PLAIN % 256;
+	color->lr = LOW / 65536;
+	color->lg = LOW / 256 - color->lr * 256;
+	color->lb = LOW % 256;
+	return (color);
+}
+
+int				color_transpoint(int a1, int a2, char c)
 {
 	int		r;
 	int		g;
 	int		b;
-	double 	k;
+	t_color	*color;
+	double	k;
 
+	color = (t_color *)malloc(sizeof(t_color));
+	color = color_hpl(color);
 	k = (double)a1 / (double)a2;
 	if (c == 'H')
 	{
-		r = ft_dtoi(PR + (HR - PR) * k);
-		g = ft_dtoi(PG + (HG - PG) * k);
-		b = ft_dtoi(PB + (HB - PB) * k);
+		r = ft_dtoi(color->pr + (color->hr - color->pr) * k);
+		g = ft_dtoi(color->pg + (color->hg - color->pg) * k);
+		b = ft_dtoi(color->pb + (color->hb - color->pb) * k);
 	}
 	if (c == 'L')
 	{
-		r = ft_dtoi(PR + (LR - PR) * k);
-		g = ft_dtoi(PG + (LG - PG) * k);
-		b = ft_dtoi(PB + (LB - PB) * k);
+		r = ft_dtoi(color->pr + (color->lr - color->pr) * k);
+		g = ft_dtoi(color->pg + (color->lg - color->pg) * k);
+		b = ft_dtoi(color->pb + (color->lb - color->pb) * k);
 	}
+	free(color);
 	return (r * 65536 + g * 256 + b);
 }

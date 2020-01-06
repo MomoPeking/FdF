@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "fdf.h"
-#include <stdio.h>
 
 static void		draw_line_lx(t_fdf *fdf, t_point p1, t_point p2)
 {
@@ -65,6 +64,19 @@ static void		draw_line(t_fdf *fdf, t_point p1, t_point p2)
 	}
 }
 
+static void		write_text(t_fdf *fdf)
+{
+	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 110, 30, WHITE, "CONTROLS");
+	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 70, 70, WHITE, "ARROWS   move");
+	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr,
+		70, 90, WHITE, "P/I      change projection");
+	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr,
+		70, 110, WHITE, "H/L      change altitude");
+	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr,
+		70, 130, WHITE, "B/S      change size");
+	mlx_string_put(fdf->mlx_ptr, fdf->win_ptr, 70, 150, WHITE, "ESC      exit");
+}
+
 void			draw_all(t_fdf *fdf)
 {
 	int	i;
@@ -83,4 +95,5 @@ void			draw_all(t_fdf *fdf)
 		if (i < fdf->pn - fdf->col)
 			draw_line(fdf, fdf->point[i], fdf->point[i + fdf->col]);
 	}
+	write_text(fdf);
 }

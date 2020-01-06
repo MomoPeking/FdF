@@ -53,12 +53,8 @@ t_fdf	*color_set(t_fdf *fdf)
 t_fdf	*iso_set(t_fdf *fdf)
 {
 	fdf->x_rt = -0.5;
-	fdf->y_rt = 0.5;
+	fdf->y_rt = 0.4;
 	fdf->z_rt = -0.5;
-	fdf->x_move = 500;
-	fdf->y_move = 250;
-	fdf->xy_times = 30;
-	fdf->z_times = 10;
 	return (fdf);
 }
 
@@ -67,9 +63,14 @@ t_fdf	*parallel_set(t_fdf *fdf)
 	fdf->x_rt = 0;
 	fdf->y_rt = 0;
 	fdf->z_rt = 0;
+	return (fdf);
+}
+
+t_fdf	*start_set(t_fdf *fdf)
+{
 	fdf->x_move = 500;
 	fdf->y_move = 250;
 	fdf->xy_times = 30;
-	fdf->z_times = 0;
+	fdf->z_times = 10;
 	return (fdf);
 }

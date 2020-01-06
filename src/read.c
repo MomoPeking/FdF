@@ -76,6 +76,11 @@ t_fdf			*read_and_store(char *file)
 	t_fdf	*fdf;
 
 	fd = open(file, O_RDONLY);
+	if (fd <= 0)
+	{
+		ft_putstr("The input file is invalid.\n");
+		exit(0);
+	}
 	pn = get_point_number(fd);
 	close(fd);
 	fdf = (t_fdf *)malloc(sizeof(t_fdf));

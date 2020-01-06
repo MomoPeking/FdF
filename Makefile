@@ -20,10 +20,12 @@ MLX_LINK = -I $(MLX_PATH) -L $(MLX_PATH) -lmlx -framework OpenGL -framework AppK
 LIB_PATH = ./libft
 LIB_LINK = -I $(MLX_PATH) -L $(LIB_PATH) -lft
 
+SRC_PATH = ./src/*.c
+
 $(NAME):
 	@make -C $(MLX_PATH)
 	@make -C $(LIB_PATH)
-	@gcc -g  -c *.c
+	@gcc -g -c $(SRC_PATH)
 	@gcc $(MLX_LINK) $(LIB_LINK) -lm *.o -o $(NAME)
 
 all: $(NAME)

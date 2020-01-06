@@ -19,12 +19,18 @@ t_fdf	*rotation(t_fdf *fdf)
 	i = -1;
 	while (++i < fdf->pn)
 	{
-		fdf->point[i].y = fdf->point[i].y * cos(fdf->x_rt) + fdf->point[i].z * sin(fdf->x_rt);
-		fdf->point[i].z = fdf->point[i].z * cos(fdf->x_rt) - fdf->point[i].y * sin(fdf->x_rt);
-        fdf->point[i].x = fdf->point[i].x * cos(fdf->y_rt) - fdf->point[i].z * sin(fdf->y_rt);
-		fdf->point[i].z = fdf->point[i].z * cos(fdf->y_rt) + fdf->point[i].x * sin(fdf->y_rt);
-        fdf->point[i].x = fdf->point[i].x * cos(fdf->z_rt) + fdf->point[i].y * sin(fdf->z_rt);
-		fdf->point[i].y = fdf->point[i].y * cos(fdf->z_rt) - fdf->point[i].x * sin(fdf->z_rt);
+		fdf->point[i].y =
+			fdf->point[i].y * cos(fdf->x_rt) + fdf->point[i].z * sin(fdf->x_rt);
+		fdf->point[i].z =
+			fdf->point[i].z * cos(fdf->x_rt) - fdf->point[i].y * sin(fdf->x_rt);
+		fdf->point[i].x =
+			fdf->point[i].x * cos(fdf->y_rt) - fdf->point[i].z * sin(fdf->y_rt);
+		fdf->point[i].z =
+			fdf->point[i].z * cos(fdf->y_rt) + fdf->point[i].x * sin(fdf->y_rt);
+		fdf->point[i].x =
+			fdf->point[i].x * cos(fdf->z_rt) + fdf->point[i].y * sin(fdf->z_rt);
+		fdf->point[i].y =
+			fdf->point[i].y * cos(fdf->z_rt) - fdf->point[i].x * sin(fdf->z_rt);
 	}
 	return (fdf);
 }
