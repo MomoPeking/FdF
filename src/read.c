@@ -19,8 +19,21 @@ static int		get_point_number(int fd)
 
 	pn = 0;
 	while (get_next_line(fd, &line) == 1)
+	{
 		pn += ft_wordcount(line);
+		free(line);
+	}
 	return (pn);
+}
+
+static void		get_info(t_fdf *fdf, int sn, int row, int i)
+{
+	fdf->info[sn].x = i;
+	fdf->info[sn].y = row;
+	if (fdf->info[sn].z > fdf->z_high)
+		fdf->z_high = fdf->info[sn].z;
+	if (fdf->info[sn].z < fdf->z_low)
+		fdf->z_low = fdf->info[sn].z;
 }
 
 static int		store_line_point(char *line, int row, t_fdf *fdf, int sn)
@@ -31,24 +44,23 @@ static int		store_line_point(char *line, int row, t_fdf *fdf, int sn)
 
 	i = 0;
 	content = ft_strsplit(line, ' ');
-	while (*content)
+	while (content[i])
 	{
-		temp = ft_strsplit(*content, ',');
-		fdf->info[sn].x = i;
-		fdf->info[sn].y = row;
+		temp = ft_strsplit(content[i], ',');
+		get_info(fdf, sn, row, i);
 		fdf->info[sn].z = ft_atoi(temp[0]);
-		if (fdf->info[sn].z > fdf->z_high)
-			fdf->z_high = fdf->info[sn].z;
-		if (fdf->info[sn].z < fdf->z_low)
-			fdf->z_low = fdf->info[sn].z;
 		if (temp[1])
 			fdf->point[sn].color = ft_atoihex(temp[1]);
 		else
 			fdf->point[sn].color = 0;
-		content++;
+		free(content[i]);
+		free(temp[0]);
+		free(temp[1]);
+		free(temp);
 		sn++;
 		i++;
 	}
+	free(content);
 	return (sn);
 }
 
@@ -63,6 +75,7 @@ static t_fdf	*store_all_point(int fd, t_fdf *fdf)
 	while (get_next_line(fd, &line) == 1)
 	{
 		sn = store_line_point(line, row, fdf, sn);
+		free(line);
 		row++;
 	}
 	fdf->col = fdf->pn / row;
